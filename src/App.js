@@ -5,17 +5,12 @@ export const App = () => {
 	const [value, setValue] = useState('');
 	const [list, setList] = useState([]);
 	const [error, setError] = useState('');
-	const [isValueVaild, setIsValueVaild] = useState(false);
+	const [isValueValid, setIsValueVaild] = useState(false);
 
 	const getFormattedDate = () => { // немного не тот формат что просили в задании)
 		const date = new Date().toISOString();
 		return date.replace('T', ' ').slice(0, 19);
 	};
-
-	const updatedList = [
-		...list,
-		{ id: Date.now(), value: value, date: getFormattedDate() },
-	];
 
 	const onInputButtonClick = (e) => {
 		const promptValue = prompt('Введите значение');
@@ -33,8 +28,11 @@ export const App = () => {
 	};
 
 	const onAddButtonClick = (e) => {
-		if (isValueVaild) {
-			setList(updatedList);
+		if (isValueValid) {
+			setList((updatedList) => [
+				...updatedList,
+                { id: Date.now(), value: value, date: getFormattedDate() },
+			]);
 			setValue('');
 			setError('');
 			setIsValueVaild(false);
@@ -60,7 +58,7 @@ export const App = () => {
 				</button>
 				<button
 					className={styles['button']}
-					disabled={!isValueVaild}
+					disabled={!isValueValid}
 					onClick={onAddButtonClick}
 				>
 					Добавить в список
