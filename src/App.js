@@ -5,9 +5,8 @@ export const App = () => {
 	const [value, setValue] = useState('');
 	const [list, setList] = useState([]);
 	const [error, setError] = useState('');
-	const [isValueValid, setIsValueVaild] = useState(false);
 
-	const getFormattedDate = () => { // немного не тот формат что просили в задании)
+	const getFormattedDate = () => {
 		const date = new Date().toISOString();
 		return date.replace('T', ' ').slice(0, 19);
 	};
@@ -15,27 +14,24 @@ export const App = () => {
 	const onInputButtonClick = (e) => {
 		const promptValue = prompt('Введите значение');
 
-		if (promptValue.length >= 3) {
+		if (promptValue && promptValue.length >= 3) {
 			setError('');
 			setValue(promptValue);
-			setIsValueVaild(true);
 		} else {
 			setError(
 				'Введенное значение должно содержать минимум 3 символа',
 			);
-			setIsValueVaild(false);
 		}
 	};
 
 	const onAddButtonClick = (e) => {
-		if (isValueValid) {
+		if (!error && value) {
 			setList((updatedList) => [
 				...updatedList,
                 { id: Date.now(), value: value, date: getFormattedDate() },
 			]);
 			setValue('');
 			setError('');
-			setIsValueVaild(false);
 		}
 	};
 
@@ -58,7 +54,7 @@ export const App = () => {
 				</button>
 				<button
 					className={styles['button']}
-					disabled={!isValueValid}
+					disabled={!!error || !value}
 					onClick={onAddButtonClick}
 				>
 					Добавить в список
